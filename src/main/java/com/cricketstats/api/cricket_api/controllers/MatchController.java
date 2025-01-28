@@ -1,26 +1,25 @@
-package com.cricketstats.api.cricket_api.Controllers;
-import java.util.List;
-import java.util.Optional;
+package com.cricketstats.api.cricket_api.controllers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cricketstats.api.cricket_api.Entities.Match;
-import com.cricketstats.api.cricket_api.Services.MatchService;
+import com.cricketstats.api.cricket_api.entities.Match;
+import com.cricketstats.api.cricket_api.service.MatchService;
 
 @RestController
-@RequestMapping("/matches")
+@RequestMapping("/api/matches")
 public class MatchController {
-    private final MatchService matchService;
-
-    public MatchController(MatchService matchService) {
-        this.matchService = matchService;
-    }
+    @Autowired
+    private MatchService matchService;
 
     @GetMapping
     public List<Match> getAllMatches() {
@@ -28,13 +27,18 @@ public class MatchController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Match> getMatchById(@PathVariable Long id) {
+    public Match getMatchById(@PathVariable Long id) {
         return matchService.getMatchById(id);
     }
 
     @PostMapping
-    public Match createMatch(@RequestBody Match match) {
-        return matchService.saveMatch(match);
+    public Match addMatch(@RequestBody Match match) {
+        return matchService.addMatch(match);
+    }
+
+    @PutMapping("/{id}")
+    public Match updateMatch(@PathVariable Long id, @RequestBody Match match) {
+        return matchService.updateMatch(id, match);
     }
 
     @DeleteMapping("/{id}")
